@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario FINDRISC</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+        .question {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin: 5px 0;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .low-risk {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .moderate-risk {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .high-risk {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cuestionario FINDRISC</h1>
+        <form id="findrisc-form">
+            <!-- Edad -->
+            <div class="question">
+                <label>¿Qué edad tiene?</label>
+                <label><input type="radio" name="age" value="0" required> Menos de 45 años</label>
+                <label><input type="radio" name="age" value="2"> Entre 45 y 54 años</label>
+                <label><input type="radio" name="age" value="3"> Entre 55 y 64 años</label>
+                <label><input type="radio" name="age" value="4"> Más de 64 años</label>
+            </div>
+
+            <!-- Índice de Masa Corporal (IMC) -->
+            <div class="question">
+                <label>¿Cuál es su IMC (kg/m²)?</label>
+                <label><input type="radio" name="bmi" value="0" required> Menos de 25</label>
+                <label><input type="radio" name="bmi" value="1"> Entre 25 y 30</label>
+                <label><input type="radio" name="bmi" value="3"> Más de 30</label>
+            </div>
+
+            <!-- Perímetro de cintura -->
+            <div class="question">
+                <label>¿Cuál es su perímetro abdominal (a nivel del ombligo)?</label>
+                <label><input type="radio" name="waist" value="0" required> Hombres: Menos de 94 cm / Mujeres: Menos de 80 cm</label>
+                <label><input type="radio" name="waist" value="3"> Hombres: 94-102 cm / Mujeres: 80-88 cm</label>
+                <label><input type="radio" name="waist" value="4"> Hombres: Más de 102 cm / Mujeres: Más de 88 cm</label>
+            </div>
+
+            <!-- Actividad física -->
+            <div class="question">
+                <label>¿Realiza al menos 30 minutos diarios de actividad física?</label>
+                <label><input type="radio" name="physical" value="0" required> Sí</label>
+                <label><input type="radio" name="physical" value="2"> No</label>
+            </div>
+
+            <!-- Consumo de frutas y verduras -->
+            <div class="question">
+                <label>¿Consume frutas, verduras y hortalizas a diario?</label>
+                <label><input type="radio" name="vegetables" value="0" required> Sí</label>
+                <label><input type="radio" name="vegetables" value="1"> No</label>
+            </div>
+
+            <!-- Hipertensión arterial -->
+            <div class="question">
+                <label>¿Le han recetado medicamentos para la hipertensión arterial?</label>
+                <label><input type="radio" name="hypertension" value="2" required> Sí</label>
+                <label><input type="radio" name="hypertension" value="0"> No</label>
+            </div>
+
+            <!-- Glucosa alta -->
+            <div class="question">
+                <label>¿Le han detectado alguna vez niveles altos de glucosa en sangre?</label>
+                <label><input type="radio" name="glucose" value="5" required> Sí</label>
+                <label><input type="radio" name="glucose" value="0"> No</label>
+            </div>
+
+            <!-- Historia familiar de diabetes -->
+            <div class="question">
+                <label>¿Tiene familiares con diabetes?</label>
+                <label><input type="radio" name="family" value="0" required> No</label>
+                <label><input type="radio" name="family" value="3"> Sí, abuelos, tíos o primos</label>
+                <label><input type="radio" name="family" value="5"> Sí, padres, hermanos o hijos</label>
+            </div>
+
+            <button type="button" onclick="calculateScore()">Calcular Puntaje</button>
+        </form>
+
+        <div id="result" class="result" style="display: none;"></div>
+    </div>
+
+    <script>
+        function calculateScore() {
+            const form = document.getElementById('findrisc-form');
+            const resultDiv = document.getElementById('result');
+            const formData = new FormData(form);
+
+            let totalScore = 0;
+            for (let value of formData.values()) {
+                totalScore += parseInt(value, 10);
+            }
+
+            let message = '';
+            let className = '';
+
+            if (totalScore < 7) {
+                message = `Puntaje: ${totalScore}. Nivel de riesgo bajo (1%).---- Su nivel de riesgo es muy bajo. En su caso no es  necesario un cuidado especial o de prevención. Sin embargo no estaría mal cuidar de su alimentación y realizar suficiente ejercicio. `; 
+                className = 'low-risk';
+            } else if (totalScore >= 7 && totalScore <= 11) {
+                message = `Puntaje: ${totalScore}. Nivel de riesgo ligeramente elevado (4%).---- Para usted es recomendable un poco de cuidado, aunque el nivel de riesgo de contraer una diabetes no es muy alto. Si quiere ir sobre seguro, siga las siguientes reglas: •  En el caso de sobrepeso deberá intentar disminuir su peso en un 7 por ciento •  Manténgase en actividad, por lo menos, por media hora durante cinco días a la semana •  La grasa debería constituir,como máximo, sólo un 30 por ciento de su alimentación •  La parte de ácidos grasos no saturados (sobre todo en la grasa animal) no debería sobrepasar del 10 por  ciento en su alimentación •  Consuma diariamente, por lo menos, 30 gramos de fibras vegetales (como las contenidas en productos integrales, verduras y frutas)`;
+                className = 'moderate-risk';
+            } else if (totalScore >= 12 && totalScore <= 14) {
+                message = `Puntaje: ${totalScore}. Nivel de riesgo moderado (17%).---- Si usted se encuentra en este grupo de riesgo, no debería postergar, por ningún motivo, el tomar medidas preventivas. En este caso lo pueden ayudar consejos e instrucciones de expertos para cambiar su estilo de vida, los cuales puede aplicarlos usted mismo. Recurra a ayuda profesional si nota que de esa manera no se puede ayudar.`;
+                className = 'moderate-risk';
+            } else if (totalScore >= 15 && totalScore <= 20) {
+                message = `Puntaje: ${totalScore}. Nivel de riesgo alto (33%). Consulte a su médico.`;
+                className = 'high-risk';
+            } else {
+                message = `Puntaje: ${totalScore}. Nivel de riesgo muy alto (50%). Consulte a su médico de inmediato. Existe la necesidad de actuar inmediatamente, ya que es muy posible que usted ya sufra de diabetes. Eso pasa con el 35 por ciento de las personas que se encuentran sobre los 20 puntos.`;
+                className = 'high-risk';
+            }
+
+            resultDiv.textContent = message;
+            resultDiv.className = `result ${className}`;
+            resultDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
